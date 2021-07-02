@@ -10,12 +10,12 @@ class MovieNowPlayingState extends Equatable {
 class MovieNowPlayingLoadingState extends MovieNowPlayingState {}
 
 class MovieNowPlayingLoadedState extends MovieNowPlayingState {
-  final List<MovieModel> movieModel;
+  final List<MovieEntity> movieEntity;
 
-  MovieNowPlayingLoadedState(this.movieModel);
+  MovieNowPlayingLoadedState(this.movieEntity);
 
   @override
-  List<Object> get props => [movieModel];
+  List<Object> get props => [movieEntity];
 }
 
 class MovieNowPlayingErrorState extends MovieNowPlayingState {

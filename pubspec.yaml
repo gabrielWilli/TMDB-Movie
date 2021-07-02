@@ -27,11 +27,10 @@ dev_dependencies:
   mockito: ^5.0.10
 
 flutter:
-
   uses-material-design: true
-
   assets:
     - assets/icons/
+    - .env
 
   # fonts:
   #   - family: Schyler

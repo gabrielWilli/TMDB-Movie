@@ -1,11 +1,8 @@
-import 'package:filmeira/features/movies/data/respositories/movie_repository_impl.dart';
 import 'package:filmeira/features/movies/presentation/bloc/movie_now_playing/movie_now_playing_bloc.dart';
 import 'package:filmeira/features/movies/presentation/bloc/movie_popular/movie_popular_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-MovieRepositoryImpl? movieRepositoryImpl;
 
 class ListMovies extends StatefulWidget {
   @override
@@ -15,6 +12,10 @@ class ListMovies extends StatefulWidget {
 class _ListaFilmesState extends State<ListMovies> {
   @override
   Widget build(BuildContext context) {
+
+    var blocMoviePopular = BlocProvider.of<MoviePopularBloc>(context);
+    var blocMovieNowPlaying = BlocProvider.of<MovieNowPlayingBloc>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -104,9 +105,9 @@ class _ListaFilmesState extends State<ListMovies> {
               ],
             ),
             BlocProvider(
-              create: (context) => MoviePopularBloc(),
+              create: (context) => blocMoviePopular,
               child: BlocBuilder<MoviePopularBloc, MoviePopularState>(
-                bloc: BlocProvider.of<MoviePopularBloc>(context)
+                bloc: blocMoviePopular
                   ..add(FetchMoviePopularEvent()),
                 builder: (context, state) {
                   if (state is MoviePopularLoadedState)
@@ -189,9 +190,9 @@ class _ListaFilmesState extends State<ListMovies> {
               ],
             ),
             BlocProvider(
-              create: (context) => MovieNowPlayingBloc(),
+              create: (context) => blocMovieNowPlaying,
               child: BlocBuilder<MovieNowPlayingBloc, MovieNowPlayingState>(
-                bloc: BlocProvider.of<MovieNowPlayingBloc>(context)
+                bloc: blocMovieNowPlaying
                   ..add(FetchMovieNowPlayEvent()),
                 builder: (context, state) {
                   if (state is MovieNowPlayingLoadedState)

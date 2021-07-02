@@ -1,10 +1,29 @@
 import 'package:equatable/equatable.dart';
-import 'package:filmeira/core/error/exception.dart';
 
 abstract class Failure extends Equatable {
   Failure([List properties = const <dynamic>[]]);
 }
 
-class ServerException implements Exception {}
+class ServerFailure implements Failure {
+  @override
+  List<Object?> get props => [];
 
-class CacheException implements Exception {}
+  @override
+  bool? get stringify => null;
+}
+
+class CacheFailure implements Failure {
+  @override
+  List<Object?> get props => [];
+
+  @override
+  bool? get stringify => null;
+}
+
+class NetworkFailure implements Failure {
+  @override
+  List<Object?> get props => [];
+
+  @override
+  bool? get stringify => null;
+}

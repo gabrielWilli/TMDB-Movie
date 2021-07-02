@@ -1,41 +1,45 @@
-import 'dart:convert';
-
-import 'package:filmeira/features/movies/data/models/movie_model.dart';
+import 'package:filmeira/core/error/exception.dart';
+import 'package:filmeira/core/network/network_info.dart';
+import 'package:filmeira/features/movies/data/data_sources/movie_remote_data_source.dart';
 import 'package:filmeira/features/movies/domain/entities/movie_entity.dart';
 import 'package:filmeira/core/error/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:filmeira/features/movies/domain/repositories/movie_repository.dart';
-import 'package:http/http.dart' as http;
 
 class MovieRepositoryImpl implements MovieRepositoryAbs {
-  late final String _keyApi = '12d88dff511df1bb152186e7132837ac';
-  late final String _baseUrlApi = 'https://api.themoviedb.org/3';
+
+  final MovieRemoteDataSourceAbs remoteDataSourceAbs;
+  final NetworkInfo networkInfo;
+
+  MovieRepositoryImpl(this.remoteDataSourceAbs, this.networkInfo);
 
   @override
   Future<Either<Failure, List<MovieEntity>>> getListMovieNowPlaying() async {
-    final response = await http.get(Uri.parse(
-        '$_baseUrlApi/movie/now_playing?api_key=$_keyApi&language=pt-BR&page=1'));
-
-    if (response.statusCode == 200) {
-      Map jsonResponse = jsonDecode(response.body);
-      var results = jsonResponse['results'];
-      return results.map((item) => MovieModel.fromJson(item));
-    } else {
-      throw Exception('Falha ao carregar os filmes');
+    try {
+      if(!await networkInfo.isConnected) {
+        throw NetworkFailure();
+      }
+      var returnMovie = await remoteDataSourceAbs.getListMovieNowPlaying();
+      return Right(returnMovie);
+    } on ServerException {
+      return Left(ServerFailure());
+    } on NetworkFailure {
+      return Left(NetworkFailure());
     }
   }
 
   @override
   Future<Either<Failure, List<MovieEntity>>> getListMoviePopular() async {
-    final response = await http.get(Uri.parse(
-        '$_baseUrlApi/movie/popular?api_key=$_keyApi&language=pt-BR&page=1'));
-
-    if (response.statusCode == 200) {
-      Map jsonResponse = jsonDecode(response.body);
-      var results = jsonResponse['results'];
-      return results.map((item) => MovieModel.fromJson(item)).toList();
-    } else {
-      throw Exception('Falha ao carregar os filmes');
-    }
+   try {
+     if(!await networkInfo.isConnected) {
+       throw NetworkFailure();
+     }
+     var returnMovie = await remoteDataSourceAbs.getListMovieNowPlaying();
+     return  Right(returnMovie);
+   } on ServerFailure {
+     throw (Left(ServerFailure()));
+   } on NetworkFailure {
+     return Left(NetworkFailure());
+   }
   }
 }
