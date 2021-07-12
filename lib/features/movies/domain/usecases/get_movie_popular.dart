@@ -4,13 +4,13 @@ import 'package:filmeira/core/usecase/usecase.dart';
 import 'package:filmeira/features/movies/domain/entities/movie_entity.dart';
 import 'package:filmeira/features/movies/domain/repositories/movie_repository.dart';
 
-class GetMoviePopular extends UseCase<MovieEntity, NoParams> {
+class GetMoviePopular implements UseCase<MovieEntity, NoParams> {
   final MovieRepositoryAbs repository;
 
   GetMoviePopular(this.repository);
 
   @override
   Future<Either<Failure, List<MovieEntity>>> call(NoParams params) async {
-    return await repository.getListMoviePopular();
+    return await repository.getListMoviePopularRemote();
   }
 }

@@ -1,20 +1,21 @@
 import 'package:filmeira/features/movies/presentation/bloc/movie_now_playing/movie_now_playing_bloc.dart';
 import 'package:filmeira/features/movies/presentation/bloc/movie_popular/movie_popular_bloc.dart';
+import 'package:filmeira/features/movies/presentation/widgets/card_view_movie_component.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ListMovies extends StatefulWidget {
+class ListMoviesPage extends StatefulWidget {
   @override
   _ListaFilmesState createState() => _ListaFilmesState();
 }
 
-class _ListaFilmesState extends State<ListMovies> {
+class _ListaFilmesState extends State<ListMoviesPage> {
+
   @override
   Widget build(BuildContext context) {
-
-    var blocMoviePopular = BlocProvider.of<MoviePopularBloc>(context);
-    var blocMovieNowPlaying = BlocProvider.of<MovieNowPlayingBloc>(context);
+    final blocMoviePopular = BlocProvider.of<MoviePopularBloc>(context);
+    final blocMovieNowPlaying = BlocProvider.of<MovieNowPlayingBloc>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -107,23 +108,19 @@ class _ListaFilmesState extends State<ListMovies> {
             BlocProvider(
               create: (context) => blocMoviePopular,
               child: BlocBuilder<MoviePopularBloc, MoviePopularState>(
-                bloc: blocMoviePopular
-                  ..add(FetchMoviePopularEvent()),
+                bloc: blocMoviePopular..add(FetchMoviePopularEvent()),
                 builder: (context, state) {
                   if (state is MoviePopularLoadedState)
                     return Container(
                       width: MediaQuery.of(context).size.width,
                       height: 265,
                       child: ListView.builder(
-                        itemCount: 5,
-                        // itemCount: state.movieModel.length,
+                        itemCount: state.movieEntity.length,
                         itemBuilder: (context, index) {
-                          return Text('Filme $index');
-
-                          // return CardViewMovieComponent(
-                          //   state.movieModel[index].urlImage.toString(),
-                          //   state.movieModel[index].vote!,
-                          // );
+                          return CardViewMovieComponent(
+                            state.movieEntity[index].urlImage.toString(),
+                            state.movieEntity[index].vote!,
+                          );
                         },
                         padding: EdgeInsets.only(left: 20.0),
                         scrollDirection: Axis.horizontal,
@@ -139,7 +136,7 @@ class _ListaFilmesState extends State<ListMovies> {
                     child: Center(
                       child: CircularProgressIndicator(
                         valueColor:
-                            AlwaysStoppedAnimation<Color>(Colors.white38),
+                            AlwaysStoppedAnimation<Color>(Colors.deepOrangeAccent),
                       ),
                     ),
                   );
@@ -192,23 +189,19 @@ class _ListaFilmesState extends State<ListMovies> {
             BlocProvider(
               create: (context) => blocMovieNowPlaying,
               child: BlocBuilder<MovieNowPlayingBloc, MovieNowPlayingState>(
-                bloc: blocMovieNowPlaying
-                  ..add(FetchMovieNowPlayEvent()),
+                bloc: blocMovieNowPlaying..add(FetchMovieNowPlayEvent()),
                 builder: (context, state) {
                   if (state is MovieNowPlayingLoadedState)
                     return Container(
                       width: MediaQuery.of(context).size.width,
                       height: 280,
                       child: ListView.builder(
-                        itemCount: 5,
-                        // itemCount: state.movieModel.length,
+                        itemCount: state.movieEntity.length,
                         itemBuilder: (context, index) {
-                          return Text('Filme $index');
-
-                          // return CardViewMovieComponent(
-                          //   state.movieModel[index].urlImage.toString(),
-                          //   state.movieModel[index].vote!,
-                          // );
+                          return CardViewMovieComponent(
+                            state.movieEntity[index].urlImage.toString(),
+                            state.movieEntity[index].vote!,
+                          );
                         },
                         padding: EdgeInsets.only(left: 20.0),
                         scrollDirection: Axis.horizontal,
@@ -221,7 +214,7 @@ class _ListaFilmesState extends State<ListMovies> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 135, top: 105.0),
                     child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white38),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrangeAccent),
                     ),
                   );
                 },
@@ -232,4 +225,5 @@ class _ListaFilmesState extends State<ListMovies> {
       ),
     );
   }
+
 }

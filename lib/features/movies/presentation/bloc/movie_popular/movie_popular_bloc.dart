@@ -7,32 +7,26 @@ import 'package:filmeira/core/error/failure.dart';
 import 'package:filmeira/core/usecase/usecase.dart';
 import 'package:filmeira/core/utils/message_error.dart';
 import 'package:filmeira/features/movies/domain/entities/movie_entity.dart';
-import 'package:filmeira/features/movies/domain/usecases/get_movie_now_playing.dart';
 import 'package:filmeira/features/movies/domain/usecases/get_movie_popular.dart';
 
 part 'movie_popular_event.dart';
-
 part 'movie_popular_state.dart';
 
 class MoviePopularBloc extends Bloc<MoviePopularEvent, MoviePopularState> {
-  final GetMoviePopular moviePopular;
-  final GetMovieNowPlaying movieNowPlaying;
+  final GetMoviePopular getMoviePopular;
 
-  MoviePopularBloc(this.moviePopular, this.movieNowPlaying)
-      : assert(moviePopular != null),
-        assert(movieNowPlaying != null),
+  MoviePopularBloc({
+    required GetMoviePopular popular,
+  })  : getMoviePopular = popular,
         super(MoviePopularLoadingState());
 
   @override
-  Stream<MoviePopularState> mapEventToState(
-    MoviePopularEvent event,
-  ) async* {
+  Stream<MoviePopularState> mapEventToState(MoviePopularEvent event) async* {
     if (event is FetchMoviePopularEvent) {
       try {
         yield MoviePopularLoadingState();
 
-        GetMovieNowPlaying? getMovieNowPlaying;
-        final failureOrResponse = await getMovieNowPlaying!(NoParams());
+        final Either<Failure, List<MovieEntity>> failureOrResponse = await getMoviePopular(NoParams());
         yield* _eitherLoadedOrErrorState(failureOrResponse);
       } catch (error) {
         print('Erro ao listar filmes >>>>>>>>>>>>>> $error');

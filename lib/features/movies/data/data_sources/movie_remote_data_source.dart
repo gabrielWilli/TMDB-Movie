@@ -14,18 +14,19 @@ class MovieRemoteDataSourceImpl implements MovieRemoteDataSourceAbs {
   Api api = Api();
 
   @override
-  Future<List<MovieModel>> getListMovieNowPlaying() => _getMovieFromUrl(api('movie/now_playing'));
+  Future<List<MovieModel>> getListMoviePopular() => _getMovieFromUrl(api('movie/popular'));
 
   @override
-  Future<List<MovieModel>> getListMoviePopular() => _getMovieFromUrl(api('movie/popular'));
+  Future<List<MovieModel>> getListMovieNowPlaying() => _getMovieFromUrl(api('movie/now_playing'));
 
   Future<List<MovieModel>> _getMovieFromUrl(String url) async {
     final response = await http.get(Uri.parse(url));
 
     if(response.statusCode == 200) {
       Map jsonResponse = jsonDecode(response.body);
-      var results = jsonResponse['results'];
-      return results.map((item) => MovieModel.fromJson(item));
+      var results = jsonResponse['results'] as List;
+
+      return results.map((item) => MovieModel.fromJson(item)).toList();
     } else {
       throw ServerException();
     }

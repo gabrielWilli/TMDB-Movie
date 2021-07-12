@@ -8,33 +8,30 @@ import 'package:filmeira/core/usecase/usecase.dart';
 import 'package:filmeira/core/utils/message_error.dart';
 import 'package:filmeira/features/movies/domain/entities/movie_entity.dart';
 import 'package:filmeira/features/movies/domain/usecases/get_movie_now_playing.dart';
-import 'package:filmeira/features/movies/domain/usecases/get_movie_popular.dart';
 
 part 'movie_now_playing_event.dart';
+
 part 'movie_now_playing_state.dart';
+
+// 21621.39875.44276
 
 class MovieNowPlayingBloc
     extends Bloc<MovieNowPlayingEvent, MovieNowPlayingState> {
-  final GetMoviePopular moviePopular;
-  final GetMovieNowPlaying movieNowPlaying;
+  final GetMovieNowPlaying getMovieNowPlaying; // no debug esta retornando null
 
-  MovieNowPlayingBloc({required this.moviePopular, required this.movieNowPlaying})
-      : assert(moviePopular != null),
-        assert(movieNowPlaying != null),
+  MovieNowPlayingBloc({required GetMovieNowPlaying nowPlaying})
+      : getMovieNowPlaying = nowPlaying,
         super(MovieNowPlayingLoadingState());
 
   @override
   Stream<MovieNowPlayingState> mapEventToState(
-    MovieNowPlayingEvent event,
-  ) async* {
+      MovieNowPlayingEvent event) async* {
     if (event is FetchMovieNowPlayEvent) {
       try {
         yield MovieNowPlayingLoadingState();
 
-        GetMoviePopular? getMoviePopular;
-        final failureOrResponse = await getMoviePopular!(NoParams());
+        final failureOrResponse = await getMovieNowPlaying(NoParams());
         yield* _eitherLoadedOrErrorState(failureOrResponse);
-
       } catch (error) {
         print('Erro ao listar filmes >>>>>>>>>>>>>> $error');
         yield MovieNowPlayingErrorState('Houve um erro ao listar os filmes');

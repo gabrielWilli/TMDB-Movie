@@ -15,6 +15,7 @@ class CardViewMovieComponent extends StatefulWidget {
 
 class _CardViewMovieComponentState extends State<CardViewMovieComponent> {
   bool _isFavorite = false;
+  List favorite = [];
 
   @override
   Widget build(BuildContext context) {

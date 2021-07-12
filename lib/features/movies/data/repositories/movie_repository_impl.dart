@@ -9,12 +9,12 @@ import 'package:filmeira/features/movies/domain/repositories/movie_repository.da
 class MovieRepositoryImpl implements MovieRepositoryAbs {
 
   final MovieRemoteDataSourceAbs remoteDataSourceAbs;
-  final NetworkInfo networkInfo;
+  final NetworkInfoAbs networkInfo;
 
-  MovieRepositoryImpl(this.remoteDataSourceAbs, this.networkInfo);
+  MovieRepositoryImpl({required this.remoteDataSourceAbs, required this.networkInfo});
 
   @override
-  Future<Either<Failure, List<MovieEntity>>> getListMovieNowPlaying() async {
+  Future<Either<Failure, List<MovieEntity>>> getListMovieNowPlayingRemote() async {
     try {
       if(!await networkInfo.isConnected) {
         throw NetworkFailure();
@@ -29,13 +29,13 @@ class MovieRepositoryImpl implements MovieRepositoryAbs {
   }
 
   @override
-  Future<Either<Failure, List<MovieEntity>>> getListMoviePopular() async {
+  Future<Either<Failure, List<MovieEntity>>> getListMoviePopularRemote() async {
    try {
      if(!await networkInfo.isConnected) {
        throw NetworkFailure();
      }
      var returnMovie = await remoteDataSourceAbs.getListMovieNowPlaying();
-     return  Right(returnMovie);
+     return Right(returnMovie);
    } on ServerFailure {
      throw (Left(ServerFailure()));
    } on NetworkFailure {
