@@ -1,5 +1,7 @@
 # filmeira
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3fdb77f2af6a48ebbf8d54c627892fea)](https://app.codacy.com/gh/gabrielWilli/TMDB-Movie?utm_source=github.com&utm_medium=referral&utm_content=gabrielWilli/TMDB-Movie&utm_campaign=Badge_Grade)
+
 Um projeto para visualização de filmes
 
 ## Getting Started
